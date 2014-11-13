@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stddef.h>
+#include "Pluma.h"
 
 // For OpenSceneGraph
 ////////////////////////////////////////////
@@ -46,12 +47,14 @@
 #include <SDL.h>
 #include <SDL_thread.h>
 
+#define MAX_PEN_COUNT 15;
 using namespace TUIO;
 
 
 /////////////////////////////////
 
 using namespace cv;
+using namespace cti;
 ////////////////////////////////////////////
 //== Callback prototype ==--
 
@@ -75,15 +78,17 @@ struct posicion {
 posicion esquina1, esquina2, esquina3, esquina4;
 gmtl::Vec3f esquinaA, esquinaB, esquinaC, esquinaD;
 gmtl::Vec3f xVecCor, yVecCor, zVecCor;
-gmtl::Matrix33f C_inv,C,C_alt;
-float D;
-cv::Mat lambda= cv::Mat::zeros(3, 3, CV_32FC1);
+//Cambio
+//gmtl::Matrix33f C_inv,C,C_alt;
+//float D;
+//cv::Mat lambda= cv::Mat::zeros(3, 3, CV_32FC1);
+//cambio
 //cv::Mat * lambda = new cv::Mat( cv::Mat::zeros(3, 3, CV_32F) );
 Point2f inputQuad[4]; 
 // Output Quadilateral or World plane coordinates
 Point2f outputQuad[4];
 
-float width=7680;float heigth=4320;
+//float Pluma::WIDTH=7680;float Pluma::HEIGHT=4320;
 
 gmtl::Vec3f coordenadasLocalesA;
 gmtl::Vec3f coordenadasLocalesB;
@@ -91,8 +96,8 @@ gmtl::Vec3f coordenadasLocalesC;
 gmtl::Vec3f coordenadasLocalesD;
 gmtl::Vec3f coordenadasLocales;
 gmtl::Vec3f coordenadasLocales2;
-gmtl::Vec3f  xlocal,zlocal,ylocal;
-float divisor_;
+//gmtl::Vec3f  xlocal,zlocal,ylocal;
+//float divisor_;
 ///////////////// CALIBRACION//////////////////////
 
 
@@ -225,7 +230,7 @@ DWORD WINAPI iniciarOSG(LPVOID lpParam){
 	esquinaADrawable->setColor( osg::Vec4(255.0, 0.0, 0.0, 1.0) );
 	esquinaAGeode->addDrawable(esquinaADrawable);
 	osg::PositionAttitudeTransform* esquinaAXForm = new osg::PositionAttitudeTransform();	
-	gmtl::Vec3f coor=C*coordenadasLocalesA+esquinaA;
+	gmtl::Vec3f coor=Pluma::C*coordenadasLocalesA+esquinaA;
 	esquinaAXForm->setPosition(osg::Vec3(coor[0],coor[1],coor[2])); 
 	esquinaAXForm->addChild(esquinaAGeode);
 	root->addChild(esquinaAXForm);
@@ -240,7 +245,7 @@ DWORD WINAPI iniciarOSG(LPVOID lpParam){
 	esquinaBGeode->addDrawable(esquinaBDrawable);
 	osg::PositionAttitudeTransform* esquinaBXForm = new osg::PositionAttitudeTransform();
 	
-	gmtl::Vec3f coorB=esquinaA+C*coordenadasLocalesB;
+	gmtl::Vec3f coorB=esquinaA+Pluma::C*coordenadasLocalesB;
 	esquinaBXForm->setPosition(osg::Vec3(coorB[0],coorB[1],coorB[2])); 
 	esquinaBXForm->addChild(esquinaBGeode);
 	root->addChild(esquinaBXForm);
@@ -255,7 +260,7 @@ DWORD WINAPI iniciarOSG(LPVOID lpParam){
 	esquinaCGeode->addDrawable(esquinaCDrawable);
 	osg::PositionAttitudeTransform* esquinaCXForm = new osg::PositionAttitudeTransform();
 	
-	gmtl::Vec3f coorC=esquinaA+C*coordenadasLocalesC;
+	gmtl::Vec3f coorC=esquinaA+Pluma::C*coordenadasLocalesC;
 	esquinaCXForm->setPosition(osg::Vec3(coorC[0],coorC[1],coorC[2])); 
 	esquinaCXForm->addChild(esquinaCGeode);
 	root->addChild(esquinaCXForm);
@@ -270,7 +275,7 @@ DWORD WINAPI iniciarOSG(LPVOID lpParam){
 	esquinaDGeode->addDrawable(esquinaDDrawable);
 	osg::PositionAttitudeTransform* esquinaDXForm = new osg::PositionAttitudeTransform();
 	
-	gmtl::Vec3f coorD=esquinaA+C*coordenadasLocalesD;
+	gmtl::Vec3f coorD=esquinaA+Pluma::C*coordenadasLocalesD;
 	esquinaDXForm->setPosition(osg::Vec3(coorD[0],coorD[1],coorD[2])); 
 	esquinaDXForm->addChild(esquinaDGeode);
 	root->addChild(esquinaDXForm);
@@ -286,7 +291,7 @@ DWORD WINAPI iniciarOSG(LPVOID lpParam){
 
 	osg::PositionAttitudeTransform* puntoDireccionXForm = new osg::PositionAttitudeTransform();
 //
-	gmtl::Vec3f coorL=esquinaA+C*coordenadasLocales;
+	gmtl::Vec3f coorL=esquinaA+Pluma::C*coordenadasLocales;
 	//
 	puntoDireccionXForm->setPosition(osg::Vec3(coorL[0],coorL[1],coorL[2])); 
 
@@ -610,28 +615,32 @@ void calibrar(float x,float y,float z){
 		gmtl::normalize(yVecCor);
 		gmtl::cross(xVecCor,yVecCor,zVecCor);
 		gmtl::normalize(xVecCor);
-		C[0][0]=xVecCor[0];
-		C[1][0]=xVecCor[1];
-		C[2][0]=xVecCor[2];
-		C[0][1]=yVecCor[0];
-		C[1][1]=yVecCor[1];
-		C[2][1]=yVecCor[2];
-		C[0][2]=zVecCor[0];
-		C[1][2]=zVecCor[1];
-		C[2][2]=zVecCor[2];
+		
+		Pluma::C[0][0]=xVecCor[0];
+		Pluma::C[1][0]=xVecCor[1];
+		Pluma::C[2][0]=xVecCor[2];
+		Pluma::C[0][1]=yVecCor[0];
+		Pluma::C[1][1]=yVecCor[1];
+		Pluma::C[2][1]=yVecCor[2];
+		Pluma::C[0][2]=zVecCor[0];
+		Pluma::C[1][2]=zVecCor[1];
+		Pluma::C[2][2]=zVecCor[2];
 
-		C_inv[0][0]=xVecCor[0];
-		C_inv[1][0]=xVecCor[1];
-		C_inv[2][0]=xVecCor[2];
-		C_inv[0][1]=yVecCor[0];
-		C_inv[1][1]=yVecCor[1];
-		C_inv[2][1]=yVecCor[2];
-		C_inv[0][2]=zVecCor[0];
-		C_inv[1][2]=zVecCor[1];
-		C_inv[2][2]=zVecCor[2];
-		gmtl::invert(C_inv);
+		Pluma::C_inv[0][0]=xVecCor[0];
+		Pluma::C_inv[1][0]=xVecCor[1];
+		Pluma::C_inv[2][0]=xVecCor[2];
+		Pluma::C_inv[0][1]=yVecCor[0];
+		Pluma::C_inv[1][1]=yVecCor[1];
+		Pluma::C_inv[2][1]=yVecCor[2];
+		Pluma::C_inv[0][2]=zVecCor[0];
+		Pluma::C_inv[1][2]=zVecCor[1];
+		Pluma::C_inv[2][2]=zVecCor[2];
+
+		gmtl::invert(Pluma::C_inv);
 		//std::cout << "n: "<<zVecCor[0]<<" ;"<<zVecCor[1]<<"; "<<zVecCor[2]<<std::endl;
-		D=zVecCor[0]*esquinaA[0]+zVecCor[1]*esquinaA[1]+zVecCor[2]*esquinaA[02]; //D de la ecuacion del plano
+		
+		//Primer D
+		Pluma::D=zVecCor[0]*esquinaA[0]+zVecCor[1]*esquinaA[1]+zVecCor[2]*esquinaA[02]; //D de la ecuacion del plano
 		
 
 
@@ -639,14 +648,15 @@ void calibrar(float x,float y,float z){
 		// The 4 points that select quadilateral on the input , from top-left in clockwise order
 		// These four pts are the sides of the rect box used as input 
 		gmtl::Vec3f tempA=gmtl::Vec3f (0,0,0);
-		coordenadasLocalesA=C_inv*tempA;	
+		coordenadasLocalesA=Pluma::C_inv*tempA;	
 		gmtl::Vec3f tempB=esquinaB-esquinaA;//gmtl::Vec3f (esquinaB[0]-esquinaA[0],esquinaB[1]-esquinaA[1],esquinaB[2]-esquinaA[2]);
-		coordenadasLocalesB=C_inv*tempB;	
+		coordenadasLocalesB=Pluma::C_inv*tempB;	
 		gmtl::Vec3f tempC=esquinaC-esquinaA;//gmtl::Vec3f (esquinaC[0]-esquinaA[0],esquinaC[1]-esquinaA[1],esquinaC[2]-esquinaA[2]);
-		coordenadasLocalesC=C_inv*tempC;	
+		coordenadasLocalesC=Pluma::C_inv*tempC;	
 		gmtl::Vec3f tempD=esquinaD-esquinaA;//gmtl::Vec3f (esquinaD[0]-esquinaA[0],esquinaD[1]-esquinaA[1],esquinaD[2]-esquinaA[2]);
-		coordenadasLocalesD=C_inv*tempD;	
+		coordenadasLocalesD=Pluma::C_inv*tempD;	
 
+		gmtl::Vec3f xlocal,zlocal,ylocal;
 		xlocal=coordenadasLocalesB-coordenadasLocalesA;
 		gmtl::normalize(xlocal);		
 		gmtl::Vec3f tempYLoc=coordenadasLocalesD-coordenadasLocalesA;
@@ -655,19 +665,22 @@ void calibrar(float x,float y,float z){
 		gmtl::normalize(zlocal);
 		gmtl::cross(ylocal,zlocal,xlocal);
 		gmtl::normalize(ylocal);
-		C_alt[0][0]=xlocal[0];
-		C_alt[1][0]=xlocal[1];
-		C_alt[2][0]=xlocal[2];
-		C_alt[0][1]=ylocal[0];
-		C_alt[1][1]=ylocal[1];
-		C_alt[2][1]=ylocal[2];
-		C_alt[0][2]=zlocal[0];
-		C_alt[1][2]=zlocal[1];
-		C_alt[2][2]=zlocal[2];
-		gmtl::invert(C_alt);
+		Pluma::C_alt[0][0]=xlocal[0];
+		Pluma::C_alt[1][0]=xlocal[1];
+		Pluma::C_alt[2][0]=xlocal[2];
+		Pluma::C_alt[0][1]=ylocal[0];
+		Pluma::C_alt[1][1]=ylocal[1];
+		Pluma::C_alt[2][1]=ylocal[2];
+		Pluma::C_alt[0][2]=zlocal[0];
+		Pluma::C_alt[1][2]=zlocal[1];
+		Pluma::C_alt[2][2]=zlocal[2];
+		gmtl::invert(Pluma::C_alt);
 
-		D=zlocal[0]*coordenadasLocalesB[0]+zlocal[1]*coordenadasLocalesB[1]+zlocal[2]*coordenadasLocalesB[2]; //D de la ecuacion del plano
-		divisor_=sqrtf(zlocal[0]*zlocal[0]+zlocal[1]*zlocal[1]+zlocal[2]*zlocal[2]);
+		
+
+		//Segundo D
+		Pluma::D=zlocal[0]*coordenadasLocalesB[0]+zlocal[1]*coordenadasLocalesB[1]+zlocal[2]*coordenadasLocalesB[2]; //D de la ecuacion del plano
+		Pluma::divisor=sqrtf(zlocal[0]*zlocal[0]+zlocal[1]*zlocal[1]+zlocal[2]*zlocal[2]);
 
 		inputQuad[3] = Point2f( coordenadasLocalesD[0],coordenadasLocalesD[1]);
 		inputQuad[2] = Point2f( coordenadasLocalesC[0],coordenadasLocalesC[1]);
@@ -677,24 +690,22 @@ void calibrar(float x,float y,float z){
 
 		// The 4 points where the mapping is to be done , from top-left in clockwise order
 		outputQuad[0] = Point2f( 0,0 );
-		outputQuad[1] = Point2f(width,0 );
-		outputQuad[2] = Point2f( width,heigth);
-		outputQuad[3] = Point2f( 0,heigth );
+		outputQuad[1] = Point2f(Pluma::WIDTH,0 );
+		outputQuad[2] = Point2f( Pluma::WIDTH,Pluma::HEIGHT);
+		outputQuad[3] = Point2f( 0,Pluma::HEIGHT );
 	//	std::cout<<lambda <<std::endl;
 
 		// Get the Perspective Transform Matrix ie lambda 
-		lambda = cv::getPerspectiveTransform( inputQuad, outputQuad );
-		//std::cout<<lambda <<std::endl;
+		Pluma::lambda = cv::getPerspectiveTransform( inputQuad, outputQuad );
+		
+		Pluma::xlocal=xlocal;
+		Pluma::ylocal=ylocal;
+		Pluma::zlocal=zlocal;
 
-		int a=1;
-
-
-
-
-
-
-
-
+		Pluma::esquinaA=esquinaA;
+		Pluma::esquinaB=esquinaB;
+		Pluma::esquinaC=esquinaC;
+		Pluma::esquinaD=esquinaD;
 
 
 
@@ -751,14 +762,14 @@ void calcularOrientacion(gmtl::Vec3f m1,gmtl::Vec3f m2, gmtl::Vec3f m3, gmtl::Ve
 		gmtl::Vec3f temp=gmtl::Vec3f (positionX_final,positionY_final,positionZ_final);
 		temp=temp-esquinaA;
 	//	gmtl::Vec3f temp=gmtl::Vec3f (posicionX-esquinaA[0],posicionY-esquinaA[1],posicionZ-esquinaA[2]);
-	coordenadasLocales=C_inv*temp;
+	coordenadasLocales=Pluma::C_inv*temp;
 	//gmtl::Vec3f coordenadasLocales_alt=C_alt*coordenadasLocales;
 		//std::cout<<"Coordenadas Golbal"<<positionX_final<<";"<<positionY_final<<";"<<positionZ_final<<std::endl;
 	
 	//std::cout<<"Coordenadas plano local"<<coordenadasLocales[0]<<";"<<coordenadasLocales[1]<<";"<<coordenadasLocales[2]<<std::endl;
 //std::cout<<"Coordenadas plano local"<<coordenadasLocales_alt[0]<<";"<<coordenadasLocales_alt[1]<<";"<<coordenadasLocales_alt[2]<<std::endl;
 	
-	float d=(coordenadasLocales[0]*zlocal[0]+coordenadasLocales[1]*zlocal[1]+coordenadasLocales[2]*zlocal[2]+D)/divisor_	;
+	float d=(coordenadasLocales[0]*Pluma::zlocal[0]+coordenadasLocales[1]*Pluma::zlocal[1]+coordenadasLocales[2]*Pluma::zlocal[2]+Pluma::D)/Pluma::divisor	;
 	// Apply the Perspective Transform just found to the src image
 	//std::cout<<"zlocal:"<<zlocal<<std::endl;
 	//std::cout<<"D:"<<D<<std::endl;
@@ -767,11 +778,11 @@ void calcularOrientacion(gmtl::Vec3f m1,gmtl::Vec3f m2, gmtl::Vec3f m3, gmtl::Ve
 		std::vector<Point2f> punto_transformado(1);
 		Point2f seed=Point2f(coordenadasLocales[0],coordenadasLocales[1]);
 		punto_original[0] = seed;
-		cv::perspectiveTransform( punto_original,  punto_transformado, lambda);
+		cv::perspectiveTransform( punto_original,  punto_transformado, Pluma::lambda);
 
 		Point2f tuio=punto_transformado[0];
-		float xx=tuio.x/width;
-		float yy=(float)(tuio.y/heigth);
+		float xx=tuio.x/Pluma::WIDTH;
+		float yy=(float)(tuio.y/Pluma::HEIGHT);
 		//std::cout<<"Coordenadas plano local: X:"<<xx<<" Y: "<<yy<<std::endl;
 		TuioCursor*cursor_1 = tuioServer->getTuioCursor(idCursor1);
 		//std::cout<<"Altura: "<<coordenadasLocales[2]<<std::endl;
@@ -876,14 +887,14 @@ void calcularOrientacion2(gmtl::Vec3f m1,gmtl::Vec3f m2, gmtl::Vec3f m3, gmtl::V
 		gmtl::Vec3f temp=gmtl::Vec3f (positionX_final2,positionY_final2,positionZ_final2);
 		temp=temp-esquinaA;
 	//	gmtl::Vec3f temp=gmtl::Vec3f (posicionX-esquinaA[0],posicionY-esquinaA[1],posicionZ-esquinaA[2]);
-	coordenadasLocales2=C_inv*temp;
+	coordenadasLocales2=Pluma::C_inv*temp;
 	//gmtl::Vec3f coordenadasLocales_alt=C_alt*coordenadasLocales;
 		//std::cout<<"Coordenadas Golbal"<<positionX_final<<";"<<positionY_final<<";"<<positionZ_final<<std::endl;
 	
 	//std::cout<<"Coordenadas plano local"<<coordenadasLocales[0]<<";"<<coordenadasLocales[1]<<";"<<coordenadasLocales[2]<<std::endl;
 //std::cout<<"Coordenadas plano local"<<coordenadasLocales_alt[0]<<";"<<coordenadasLocales_alt[1]<<";"<<coordenadasLocales_alt[2]<<std::endl;
 	
-	float d=(coordenadasLocales2[0]*zlocal[0]+coordenadasLocales2[1]*zlocal[1]+coordenadasLocales2[2]*zlocal[2]+D)/divisor_	;
+	float d=(coordenadasLocales2[0]*Pluma::zlocal[0]+coordenadasLocales2[1]*Pluma::zlocal[1]+coordenadasLocales2[2]*Pluma::zlocal[2]+Pluma::D)/Pluma::divisor;
 	// Apply the Perspective Transform just found to the src image
 	//std::cout<<"zlocal:"<<zlocal<<std::endl;
 	//std::cout<<"D:"<<D<<std::endl;
@@ -892,11 +903,11 @@ void calcularOrientacion2(gmtl::Vec3f m1,gmtl::Vec3f m2, gmtl::Vec3f m3, gmtl::V
 		std::vector<Point2f> punto_transformado(1);
 		Point2f seed=Point2f(coordenadasLocales2[0],coordenadasLocales2[1]);
 		punto_original[0] = seed;
-		cv::perspectiveTransform( punto_original,  punto_transformado, lambda);
+		cv::perspectiveTransform( punto_original,  punto_transformado, Pluma::lambda);
 
 		Point2f tuio=punto_transformado[0];
-		float xx=tuio.x/width;
-		float yy=(float)(tuio.y/heigth);
+		float xx=tuio.x/Pluma::WIDTH;
+		float yy=(float)(tuio.y/Pluma::HEIGHT);
 		//std::cout<<"Coordenadas plano local: X:"<<xx<<" Y: "<<yy<<std::endl;
 		//TuioCursor*cursor_1 = tuioServer->getTuioCursor(idCursor1);
 		//std::cout<<"Altura: "<<coordenadasLocales[2]<<std::endl;
@@ -970,7 +981,7 @@ int main( int argc, char* argv[] )
 
 	// Load a project file from the executable directory.
 	printf( "Loading Project: project.ttp\n\n" );
-	CheckResult( TT_LoadProject("project_two.ttp") );
+	CheckResult( TT_LoadProject("test2.ttp") );
 
 	// List all detected cameras.
 	printf( "Cameras:\n" );
@@ -982,9 +993,11 @@ int main( int argc, char* argv[] )
 
 	// List all defined rigid bodies.
 	printf("Rigid Bodies:\n");
+	Pluma  *listaPlumas[15];
 	for( int i = 0; i < TT_TrackableCount(); i++)
 	{
 		printf("\t%s\n", TT_TrackableName(i));
+		listaPlumas[i]=new Pluma(i+1);
 	}
 	printf("\n");
 
@@ -1102,11 +1115,20 @@ int main( int argc, char* argv[] )
 						if(!mCalibracion&&i==0){
 							calibrar(positionX,positionY,positionZ);
 						}else if(mCalibracion&&i==0){
+
 							posicion=gmtl::Vec3f(positionX,positionY,positionZ);
-							calcularOrientacion(m1,m2,m3,posicion);}
+							//calcularOrientacion(m1,m2,m3,posicion);}
+							listaPlumas[i]->calcularOrientacion(positionX,positionY,positionZ,m1,m2,m3,posicion);}
 						else if(mCalibracion&&i==1){
 							posicion=gmtl::Vec3f(positionX,positionY,positionZ);
-							calcularOrientacion2(m1,m2,m3,posicion);}
+							//calcularOrientacion2(m1,m2,m3,posicion);
+							listaPlumas[i]->calcularOrientacion(positionX,positionY,positionZ,m1,m2,m3,posicion);
+						}
+						else if(mCalibracion&&i==2){
+							posicion=gmtl::Vec3f(positionX,positionY,positionZ);
+							//calcularOrientacion2(m1,m2,m3,posicion);
+							listaPlumas[i]->calcularOrientacion(positionX,positionY,positionZ,m1,m2,m3,posicion);
+						}
 					}
 					else
 					{

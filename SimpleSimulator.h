@@ -24,6 +24,7 @@
 
 #include "TuioServer.h"
 #include "TuioCursor.h"
+#include "Pluma.h"
 #include <list>
 #include <math.h>
 

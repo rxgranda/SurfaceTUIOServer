@@ -93,6 +93,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Pluma.cpp" />
     <ClCompile Include="SimpleSimulator.cpp" />
     <ClCompile Include="oscpack\ip\win32\NetworkingUtils.cpp" />
     <ClCompile Include="oscpack\osc\OscOutboundPacketStream.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="TUIO\TuioTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Pluma.h" />
     <ClInclude Include="SimpleSimulator.h" />
     <ClInclude Include="oscpack\ip\NetworkingUtils.h" />
     <ClInclude Include="oscpack\osc\OscException.h" />
