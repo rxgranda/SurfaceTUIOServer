@@ -12,6 +12,7 @@ float Pluma::D=0;
 float Pluma::divisor=1;
 float Pluma::WIDTH=7680;
 float Pluma::HEIGHT=4320;
+float Pluma::ALTURA_PLUMA=0.135;
 
 
 gmtl::Matrix33f Pluma::C_inv;
@@ -69,7 +70,7 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 		positionZ_final=posicionZ+t*c;*/
 
 		/// Sacar posicion punta de la pluma
-		float largo_pluma = 0.135*10.0f;
+		float largo_pluma = ALTURA_PLUMA*10.0f;
 		float k = sqrtf((float)(largo_pluma*largo_pluma) / (float)(a*a + b*b + c*c));
 		float h = oPosY + k*b;
 		float positionX_final = oPosX + k*a;

@@ -26,7 +26,7 @@ namespace cti{
 			static float HEIGHT;		
 			static gmtl::Vec3f xlocal,zlocal,ylocal;
 			static gmtl::Vec3f esquinaA, esquinaB, esquinaC, esquinaD;
-
+			static float ALTURA_PLUMA;
 			// escalares Para la ecuacion del plano
 			void calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f m1,gmtl::Vec3f m2, gmtl::Vec3f m3, gmtl::Vec3f posicion);
 			Pluma(int numero);
