@@ -980,7 +980,7 @@ int main( int argc, char* argv[] )
 	TT_Update();
 
 	// Load a project file from the executable directory.
-	printf( "Loading Project: project.ttp\n\n" );
+	printf( "Loading Project: test2.ttp\n\n" );
 	CheckResult( TT_LoadProject("test2.ttp") );
 
 	// List all detected cameras.
@@ -1112,7 +1112,7 @@ int main( int argc, char* argv[] )
 							//printf( "\t\t%d: World (%.3f, %.3f, %.3f) Local (%.3f, %.3f, %.3f)\n", j + 1, 
 								//mx, my, mz, localPnt[0], localPnt[1], localPnt[2] );
 						}
-						if(!mCalibracion&&i==0){
+						/*if(!mCalibracion&&i==0){
 							calibrar(positionX,positionY,positionZ);
 						}else if(mCalibracion&&i==0){
 
@@ -1128,7 +1128,13 @@ int main( int argc, char* argv[] )
 							posicion=gmtl::Vec3f(positionX,positionY,positionZ);
 							//calcularOrientacion2(m1,m2,m3,posicion);
 							listaPlumas[i]->calcularOrientacion(positionX,positionY,positionZ,m1,m2,m3,posicion);
+						}*/
+						if(!mCalibracion){
+								calibrar(positionX,positionY,positionZ);
+						}else{
+							listaPlumas[i]->calcularOrientacion(positionX,positionY,positionZ,m1,m2,m3,posicion);
 						}
+
 					}
 					else
 					{

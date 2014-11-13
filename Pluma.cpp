@@ -93,7 +93,7 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 	//std::cout<<"zlocal:"<<zlocal<<std::endl;
 	//std::cout<<"D:"<<D<<std::endl;
 	std::cout<<"Distancia:"<<d<<std::endl;
-	printf("Antes de tuio");
+	
 		std::vector<cv::Point2f> punto_original(1);
 		std::vector<cv::Point2f> punto_transformado(1);
 		cv::Point2f seed=cv::Point2f(coordenadasLocales[0],coordenadasLocales[1]);
@@ -127,7 +127,7 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 
 			if (cursor == NULL || idCursor == -1000)
 			{
-				printf("anadir");
+				
 				cursor = tuioServer->addTuioCursor(promedio[0], promedio[1],numeroPluma);
 				idCursor = cursor->getCursorID();
 			}
@@ -142,7 +142,7 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 			tuioServer->commitFrame();
 		}else{
 			//printf("numero de cursores: %d", ncursors);
-			printf("Antes de tuio");
+			
 			if (cursor != NULL){
 				
 				tuioServer->initFrame(TUIO::TuioTime::getSessionTime());
@@ -151,7 +151,7 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 				idCursor = -1000;
 				cursor = NULL;
 				numMuestra=0;
-				printf("Eliminado");
+				
 			}
 		}
 
