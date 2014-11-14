@@ -997,7 +997,17 @@ int main( int argc, char* argv[] )
 	for( int i = 0; i < TT_TrackableCount(); i++)
 	{
 		printf("\t%s\n", TT_TrackableName(i));
-		listaPlumas[i]=new Pluma(i+1);
+		std::string nombre= TT_TrackableName(i);
+		std::string numero=nombre.substr(3,1);
+		int numeroPen=atoi(numero.c_str());
+
+		if(numeroPen==4)
+			listaPlumas[i]=new Pluma(numeroPen,true);
+		else if(numeroPen==5)
+			listaPlumas[i]=new Pluma(numeroPen,true);
+		else
+			listaPlumas[i]=new Pluma(numeroPen);
+
 	}
 	printf("\n");
 
