@@ -981,7 +981,7 @@ int main( int argc, char* argv[] )
 
 	// Load a project file from the executable directory.
 	printf( "Loading Project: test2.ttp\n\n" );
-	CheckResult( TT_LoadProject("test2.ttp") );
+	CheckResult( TT_LoadProject("demo.ttp") );
 
 	// List all detected cameras.
 	printf( "Cameras:\n" );
