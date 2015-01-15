@@ -20,11 +20,12 @@ gmtl::Matrix33f Pluma::C;
 gmtl::Matrix33f Pluma::C_alt;
 TUIO::TuioServer *Pluma::tuioServer = new TUIO::TuioServer();
 
-Pluma::Pluma(int numero)
+Pluma::Pluma(int numero, bool inversion)
 {
 	numeroPluma=numero;
 	idCursor=-1000;
 	cursor=NULL;
+	invertir=inversion;
 }
 
 
@@ -37,7 +38,11 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 	gmtl::Vec3f vector1,vector2,dir;
 	vector1 = m1-m2;
 	vector2=m3-m2;
-	gmtl::cross(dir,vector2,vector1);
+	if(!invertir)
+		gmtl::cross(dir,vector2,vector1);
+	else
+		gmtl::cross(dir,vector1,vector2);
+
 	float posicionX=posicion[0];
 	float posicionY=posicion[1];
 	float posicionZ=posicion[2];
@@ -92,7 +97,7 @@ void Pluma::calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f 
 	// Apply the Perspective Transform just found to the src image
 	//std::cout<<"zlocal:"<<zlocal<<std::endl;
 	//std::cout<<"D:"<<D<<std::endl;
-	std::cout<<"Distancia:"<<d<<std::endl;
+	//std::cout<<"Distancia:"<<d<<std::endl;
 	
 		std::vector<cv::Point2f> punto_original(1);
 		std::vector<cv::Point2f> punto_transformado(1);

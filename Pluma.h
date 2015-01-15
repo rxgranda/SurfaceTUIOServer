@@ -9,6 +9,7 @@ namespace cti{
 	class Pluma
 	{
 		public:
+			bool invertir;
 			int numeroPluma;
 			int numMuestra;
 			gmtl::Vec3f promedio, muestra1,muestra2,muestra3;
@@ -29,7 +30,7 @@ namespace cti{
 			static float ALTURA_PLUMA;
 			// escalares Para la ecuacion del plano
 			void calcularOrientacion(float oPosX,float oPosY,float oPosZ,gmtl::Vec3f m1,gmtl::Vec3f m2, gmtl::Vec3f m3, gmtl::Vec3f posicion);
-			Pluma(int numero);
+			Pluma(int numero, bool inversion=false);
 			~Pluma(void);
 	};
 }
