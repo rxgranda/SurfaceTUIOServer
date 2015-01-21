@@ -1003,7 +1003,7 @@ int main( int argc, char* argv[] )
 
 		if(numeroPen==4)
 			listaPlumas[i]=new Pluma(numeroPen,true);
-		else if(numeroPen==5)
+		else if(numeroPen==2)
 			listaPlumas[i]=new Pluma(numeroPen,true);
 		else
 			listaPlumas[i]=new Pluma(numeroPen);
